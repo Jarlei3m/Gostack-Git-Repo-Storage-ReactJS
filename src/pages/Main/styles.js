@@ -9,7 +9,7 @@ export const Container = styled.div`
   margin: 80px auto;
 
   h1 {
-    font-size: '20px';
+    font-size: 20px;
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -71,4 +71,26 @@ export const SubmitButton = styled.button.attrs( props => ({
       animation: ${rotate} 2s linear infinite;
     }
   `}
+`;
+export const List = styled.ul`
+  margin-top: 30px;
+  list-style: none;
+
+  li {
+    padding: 15px 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & + li {
+      border-top: 1px solid #eee;
+    }
+
+    a {
+      color: #7159c1;
+      text-decoration: none;
+    }
+  }
+
 `;

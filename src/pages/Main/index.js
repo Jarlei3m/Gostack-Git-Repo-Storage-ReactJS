@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
 
-import { Container, Form, SubmitButton } from './styles';
+import { Container, Form, SubmitButton, List } from './styles';
 
 class Main extends Component {
   state = {
@@ -11,6 +12,24 @@ class Main extends Component {
     repositories: [],
     loading: false,
   };
+
+  // get datas from localStorage
+  componentDidMount() {
+    const repositories = localStorage.getItem('repositories');
+
+    if (repositories) {
+      this.setState({ repositories: JSON.parse(repositories) })
+    }
+  }
+
+  // Save localStorage datas
+  componentDidUpdate(_, prevState) {
+    const { repositories } = this.state;
+
+    if (prevState.repositories !== repositories) {
+      localStorage.setItem('repositories', JSON.stringify(repositories));
+    }
+  }
 
   handleInputChange = e => {
     this.setState({ newRepo: e.target.value })
@@ -37,19 +56,19 @@ class Main extends Component {
   };
 
   render() {
-    const { newRepo, loading } = this.state;
+    const { newRepo, loading, repositories } = this.state;
 
     return (
       <Container>
         <h1>
           <FaGithubAlt />
-          Respositórios
+          Respository
         </h1>
 
         <Form onSubmit={this.handleSubmit}>
           <input
             type='text'
-            placeholder='Adicionar repositório'
+            placeholder='Add repository'
             value={newRepo}
             onChange={this.handleInputChange}
           />
@@ -63,6 +82,15 @@ class Main extends Component {
 
           </SubmitButton>
         </Form>
+
+        <List>
+          {repositories.map(repository => (
+            <li key={repository.name}>
+              <span>{repository.name}</span>
+              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>Details</Link>
+            </li>
+          ) )}
+        </List>
       </Container>
     );
   }
