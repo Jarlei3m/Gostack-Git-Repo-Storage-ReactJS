@@ -5,13 +5,15 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import Container from '../components/Container';
-import { Form, SubmitButton, List } from './styles';
+import { Form, SubmitButton, List, InputField, SmallMessage } from './styles';
 
 class Main extends Component {
   state = {
     newRepo: '',
     repositories: [],
     loading: false,
+    notFound: false,
+    message: '',
   };
 
   // get datas from localStorage
@@ -21,6 +23,7 @@ class Main extends Component {
     if (repositories) {
       this.setState({ repositories: JSON.parse(repositories) })
     }
+
   }
 
   // Save localStorage datas
@@ -37,27 +40,54 @@ class Main extends Component {
   }
 
   handleSubmit = async e => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    this.setState({ loading: true });
+      this.setState({ loading: true });
 
-    const { newRepo, repositories } = this.state;
+      const { newRepo, repositories } = this.state;
 
-    const response = await api.get(`/repos/${newRepo}`);
+      // check duplicated repo
+      const duplicatedRepo = repositories.filter(repository => repository.name === newRepo)
 
-    const data = {
-      name: response.data.full_name,
-    };
+      console.log(duplicatedRepo.length === 0)
 
-    this.setState({
-      repositories: [ ...repositories, data],
-      newRepo: '',
-      loading: false,
-    });
+      if (duplicatedRepo.length === 0) {
+        const response = await api.get(`/repos/${newRepo}`);
+        const data = {
+          name: response.data.full_name,
+        };
+
+        this.setState({
+          repositories: [ ...repositories, data],
+          newRepo: '',
+          loading: false,
+          notFound: false,
+          message: 'successfully added!',
+        })
+
+        setTimeout(() => this.setState({ message: ''}), 3000);
+
+      } else {
+        throw new Error('Duplicated Repo')
+      }
+
+    } catch (error) {
+      console.log(error)
+      this.setState({
+        loading: false,
+        notFound: true,
+        message: 'invalid input!',
+      })
+
+      setTimeout(() => this.setState({ message: '' }), 3000);
+
+    }
   };
 
+
   render() {
-    const { newRepo, loading, repositories } = this.state;
+    const { newRepo, loading, repositories, notFound, message } = this.state;
 
     return (
       <Container>
@@ -67,18 +97,21 @@ class Main extends Component {
         </h1>
 
         <Form onSubmit={this.handleSubmit}>
-          <input
-            type='text'
-            placeholder='Add repository'
+          <InputField
             value={newRepo}
             onChange={this.handleInputChange}
+            notFound={notFound}
           />
+
+          <SmallMessage notFound={notFound}>
+            { message }
+          </SmallMessage>
 
           <SubmitButton loading={loading}>
             { loading ?
               <FaSpinner color='#fff' size={14} />
               :
-              <FaPlus color="#fff" size={14} />
+              <FaPlus color='#fff' size={14} />
             }
 
           </SubmitButton>

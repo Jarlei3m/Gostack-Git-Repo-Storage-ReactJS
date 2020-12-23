@@ -4,14 +4,43 @@ export const Form = styled.form`
   margin-top: 30px;
   display: flex;
   flex-direction: row;
+  position: relative;
+`;
 
-  input {
-    flex: 1;
-    border: 1px solid #eee;
-    padding: 10px 15px;
-    border-radius: 4px;
-    font-size: 16px;
+export const InputField = styled.input.attrs( props => ({
+  type: 'text',
+  placeholder: 'Add repository',
+}))`
+
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 16px;
+
+  border: ${ props => props.notFound ? '1px solid red' : '1px solid #eee'};
+
+`;
+
+const translate = keyframes`
+  from {
+    transform: translate3d(0, -8px, 0);
   }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+`
+
+export const SmallMessage = styled.small`
+  position: absolute;
+  top: 44px;
+  left: 8px;
+  font-size: 11px;
+  color: ${props => props.notFound ? 'rgba(233, 33, 33);' : 'rgb(99, 192, 99);'};
+
+  ${props => props.children && css`
+    animation: ${translate} .3s ease-out;
+  `}
 `;
 
 const rotate = keyframes`
@@ -51,6 +80,7 @@ export const SubmitButton = styled.button.attrs( props => ({
     }
   `}
 `;
+
 export const List = styled.ul`
   margin-top: 30px;
   list-style: none;
