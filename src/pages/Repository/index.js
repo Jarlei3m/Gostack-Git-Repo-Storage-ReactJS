@@ -5,7 +5,7 @@ import { FaSpinner } from 'react-icons/fa'
 import api from '../../services/api';
 
 import Container from '../components/Container';
-import { Loading, Owner, IssueList } from './styles';
+import { Loading, Owner, IssueList, FilterState } from './styles';
 
 class Repository extends Component {
   static propTypes = {
@@ -19,22 +19,21 @@ class Repository extends Component {
   state = {
     repository: {},
     issues: [],
+    issueState: 'all',
     loading: true,
   };
 
-
   async componentDidMount() {
     const { match } = this.props;
+    const { issueState } = this.state;
 
     const repoName = decodeURIComponent(match.params.repository);
-
-    const response = await api.get(`/repos/${repoName}`);
 
     const [repository, issues] = await Promise.all([
       api.get(`/repos/${repoName}`),
       api.get(`/repos/${repoName}/issues`, {
         params: {
-          state: 'open',
+          state: `${issueState}`,
           per_page: 5,
         },
       }),
@@ -45,6 +44,35 @@ class Repository extends Component {
       issues: issues.data,
       loading: false,
     });
+  }
+
+  handleStateChange = e => {
+    this.setState({
+      issueState: e.target.value
+    })
+  }
+
+  async componentDidUpdate(_, prevState) {
+    const { issueState } = this.state;
+    console.log(prevState)
+
+    if ( prevState.issueState !== issueState ) {
+      const { match } = this.props;
+      const repoName = decodeURIComponent(match.params.repository);
+
+      const [issues] = await Promise.all([
+        api.get(`/repos/${repoName}/issues`, {
+          params: {
+            state: `${issueState}`,
+            per_page: 5,
+          },
+        }),
+      ]);
+
+      this.setState({
+        issues: issues.data,
+      });
+    }
   }
 
   render() {
@@ -60,11 +88,18 @@ class Repository extends Component {
     return (
       <Container>
         <Owner>
-        <Link to="/">Return to repositories</Link>
+          <Link to="/">Return to repositories</Link>
           <img src={repository.owner.avatar_url} alt={repository.owner.login} />
           <h1>{repository.name}</h1>
           <p>{repository.description}</p>
         </Owner>
+
+        <label htmlFor="states">Select issue state:</label>
+        <FilterState id="states" onChange={this.handleStateChange}>
+            <option value="all">all</option>
+            <option value="open">open</option>
+            <option value="closed">closed</option>
+        </FilterState>
 
         <IssueList>
           {issues.map(issue => (

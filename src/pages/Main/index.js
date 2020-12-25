@@ -50,8 +50,6 @@ class Main extends Component {
       // check duplicated repo
       const duplicatedRepo = repositories.filter(repository => repository.name === newRepo)
 
-      console.log(duplicatedRepo.length === 0)
-
       if (duplicatedRepo.length === 0) {
         const response = await api.get(`/repos/${newRepo}`);
         const data = {

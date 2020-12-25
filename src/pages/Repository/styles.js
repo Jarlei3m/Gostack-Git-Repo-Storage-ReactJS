@@ -116,3 +116,7 @@ export const IssueList = styled.ul`
     }
   }
 `;
+
+export const FilterState = styled.select`
+  margin: 12px 6px
+`;
