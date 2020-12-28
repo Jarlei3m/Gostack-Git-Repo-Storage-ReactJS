@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FaSpinner } from 'react-icons/fa'
+import { FaSpinner, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import api from '../../services/api';
 
 import Container from '../components/Container';
-import { Loading, Owner, IssueList, FilterState } from './styles';
+import { Loading, Owner, IssueList, FilterState, Pagination } from './styles';
 
 class Repository extends Component {
   static propTypes = {
@@ -21,11 +21,12 @@ class Repository extends Component {
     issues: [],
     issueState: 'all',
     loading: true,
+    page: 1,
   };
 
   async componentDidMount() {
     const { match } = this.props;
-    const { issueState } = this.state;
+    const { issueState, pageNumber } = this.state;
 
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -35,6 +36,7 @@ class Repository extends Component {
         params: {
           state: `${issueState}`,
           per_page: 5,
+          page: `${pageNumber}`,
         },
       }),
     ]);
@@ -46,37 +48,45 @@ class Repository extends Component {
     });
   }
 
-  handleStateChange = e => {
+  updateIssues = async () => {
+    const { issueState, page } = this.state;
+
+    const { match } = this.props;
+    const repoName = decodeURIComponent(match.params.repository);
+
+    const [issues] = await Promise.all([
+      api.get(`/repos/${repoName}/issues`, {
+        params: {
+          state: `${issueState}`,
+          per_page: 5,
+          page,
+        },
+      }),
+    ]);
+
     this.setState({
-      issueState: e.target.value
-    })
+      issues: issues.data,
+    });
   }
 
-  async componentDidUpdate(_, prevState) {
-    const { issueState } = this.state;
-    console.log(prevState)
+  handleStateChange = async e => {
+    await this.setState({
+      issueState: e.target.value
+    })
+    this.updateIssues();
+  }
 
-    if ( prevState.issueState !== issueState ) {
-      const { match } = this.props;
-      const repoName = decodeURIComponent(match.params.repository);
+  handlePageChange = async e => {
+    const { page } = this.state
 
-      const [issues] = await Promise.all([
-        api.get(`/repos/${repoName}/issues`, {
-          params: {
-            state: `${issueState}`,
-            per_page: 5,
-          },
-        }),
-      ]);
-
-      this.setState({
-        issues: issues.data,
-      });
-    }
+    await this.setState({
+      page: e === 'back' ? page - 1 : page + 1
+    });
+    this.updateIssues();
   }
 
   render() {
-    const { repository, issues, loading } = this.state;
+    const { repository, issues, loading, page } = this.state;
 
     if (loading) {
       return (
@@ -117,6 +127,11 @@ class Repository extends Component {
             </li>
           ))}
         </IssueList>
+
+        <Pagination>
+          <button type="button" disabled={page < 2} onClick={() => this.handlePageChange('back')} className="previous"><FaArrowLeft /> Previous</button>
+          <button type="button" onClick={() => this.handlePageChange('next')} className="next">Next <FaArrowRight /></button>
+        </Pagination>
       </Container>
     );
   }

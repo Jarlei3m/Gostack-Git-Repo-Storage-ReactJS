@@ -100,6 +100,25 @@ export const List = styled.ul`
       color: #7159c1;
       text-decoration: none;
     }
+
+    span {
+      position: relative;
+    }
+
+    span:hover svg {
+      opacity: 1;
+    }
+
+    svg {
+      position: absolute;
+      left: -18px;
+      top: 2px;
+      cursor: pointer;
+
+      opacity: 0;
+      font-size: 13px;
+      color: #a3a3a3;
+    }
   }
 
 `;

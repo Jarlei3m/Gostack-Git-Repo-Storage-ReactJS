@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
+import { FaGithubAlt, FaPlus, FaSpinner, FaTrashAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
@@ -33,6 +33,19 @@ class Main extends Component {
     if (prevState.repositories !== repositories) {
       localStorage.setItem('repositories', JSON.stringify(repositories));
     }
+  }
+
+  // remove localStorage data
+  removeLSrepo = name => {
+    const { repositories } = this.state
+    const filteredRepo = repositories.filter(repository => repository.name !== name)
+
+    this.setState({
+      repositories: filteredRepo,
+      message: 'successfully deleted!'
+    })
+
+    setTimeout(() => this.setState({ message: ''}), 3000);
   }
 
   handleInputChange = e => {
@@ -118,7 +131,8 @@ class Main extends Component {
         <List>
           {repositories.map(repository => (
             <li key={repository.name}>
-              <span>{repository.name}</span>
+
+              <span>{repository.name}<FaTrashAlt onClick={() => this.removeLSrepo(repository.name)} /></span>
               <Link to={`/repository/${encodeURIComponent(repository.name)}`}>Details</Link>
             </li>
           ) )}

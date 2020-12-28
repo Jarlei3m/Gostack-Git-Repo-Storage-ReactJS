@@ -118,5 +118,38 @@ export const IssueList = styled.ul`
 `;
 
 export const FilterState = styled.select`
-  margin: 12px 6px
+  margin: 12px 6px;
+`;
+
+export const Pagination = styled.div`
+  text-align: center;
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    background: none;
+    border: none;
+    text-decoration: none;
+    color: #7159c1;
+
+    display: flex;
+    align-items: center;
+  }
+
+  button.previous {
+    margin-right: 18px;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  svg {
+    margin: 0 4px;
+    font-size: 12px;
+  }
 `;
