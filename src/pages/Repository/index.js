@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FaSpinner, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { FaSpinner, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import api from '../../services/api';
 
 import Container from '../components/Container';
@@ -67,33 +67,34 @@ class Repository extends Component {
     this.setState({
       issues: issues.data,
     });
-  }
+  };
 
   handleStateChange = async e => {
     await this.setState({
-      issueState: e.target.value
-    })
-    this.updateIssues();
-  }
-
-  handlePageChange = async e => {
-    const { page } = this.state
-
-    await this.setState({
-      page: e === 'back' ? page - 1 : page + 1
+      issueState: e.target.value,
     });
     this.updateIssues();
-  }
+  };
+
+  handlePageChange = async e => {
+    const { page } = this.state;
+
+    await this.setState({
+      page: e === 'back' ? page - 1 : page + 1,
+    });
+    this.updateIssues();
+  };
 
   render() {
     const { repository, issues, loading, page } = this.state;
 
     if (loading) {
       return (
-      <Loading>
-        <FaSpinner />
-      </Loading>
-    )}
+        <Loading>
+          <FaSpinner />
+        </Loading>
+      );
+    }
 
     return (
       <Container>
@@ -106,18 +107,20 @@ class Repository extends Component {
 
         <label htmlFor="states">Select issue state:</label>
         <FilterState id="states" onChange={this.handleStateChange}>
-            <option value="all">all</option>
-            <option value="open">open</option>
-            <option value="closed">closed</option>
+          <option value="all">all</option>
+          <option value="open">open</option>
+          <option value="closed">closed</option>
         </FilterState>
 
         <IssueList>
           {issues.map(issue => (
             <li key={String(issue.id)}>
-              <img src={issue.user.avatar_url} alt={issue.user.login}/>
+              <img src={issue.user.avatar_url} alt={issue.user.login} />
               <div>
                 <strong>
-                  <a target="_blank" href={issue.html_url}>{issue.title}</a>
+                  <a target="_blank" href={issue.html_url}>
+                    {issue.title}
+                  </a>
                   {issue.labels.map(label => (
                     <span key={String(label.id)}>{label.name}</span>
                   ))}
@@ -129,8 +132,21 @@ class Repository extends Component {
         </IssueList>
 
         <Pagination>
-          <button type="button" disabled={page < 2} onClick={() => this.handlePageChange('back')} className="previous"><FaArrowLeft /> Previous</button>
-          <button type="button" onClick={() => this.handlePageChange('next')} className="next">Next <FaArrowRight /></button>
+          <button
+            type="button"
+            disabled={page < 2}
+            onClick={() => this.handlePageChange('back')}
+            className="previous"
+          >
+            <FaArrowLeft /> Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => this.handlePageChange('next')}
+            className="next"
+          >
+            Next <FaArrowRight />
+          </button>
         </Pagination>
       </Container>
     );

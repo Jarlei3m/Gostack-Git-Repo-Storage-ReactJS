@@ -21,9 +21,8 @@ class Main extends Component {
     const repositories = localStorage.getItem('repositories');
 
     if (repositories) {
-      this.setState({ repositories: JSON.parse(repositories) })
+      this.setState({ repositories: JSON.parse(repositories) });
     }
-
   }
 
   // Save localStorage datas
@@ -37,20 +36,22 @@ class Main extends Component {
 
   // remove localStorage data
   removeLSrepo = name => {
-    const { repositories } = this.state
-    const filteredRepo = repositories.filter(repository => repository.name !== name)
+    const { repositories } = this.state;
+    const filteredRepo = repositories.filter(
+      repository => repository.name !== name
+    );
 
     this.setState({
       repositories: filteredRepo,
-      message: 'successfully deleted!'
-    })
+      message: 'successfully deleted!',
+    });
 
-    setTimeout(() => this.setState({ message: ''}), 3000);
-  }
+    setTimeout(() => this.setState({ message: '' }), 3000);
+  };
 
   handleInputChange = e => {
-    this.setState({ newRepo: e.target.value })
-  }
+    this.setState({ newRepo: e.target.value });
+  };
 
   handleSubmit = async e => {
     try {
@@ -61,7 +62,9 @@ class Main extends Component {
       const { newRepo, repositories } = this.state;
 
       // check duplicated repo
-      const duplicatedRepo = repositories.filter(repository => repository.name === newRepo)
+      const duplicatedRepo = repositories.filter(
+        repository => repository.name === newRepo
+      );
 
       if (duplicatedRepo.length === 0) {
         const response = await api.get(`/repos/${newRepo}`);
@@ -70,32 +73,28 @@ class Main extends Component {
         };
 
         this.setState({
-          repositories: [ ...repositories, data],
+          repositories: [...repositories, data],
           newRepo: '',
           loading: false,
           notFound: false,
           message: 'successfully added!',
-        })
+        });
 
-        setTimeout(() => this.setState({ message: ''}), 3000);
-
+        setTimeout(() => this.setState({ message: '' }), 3000);
       } else {
-        throw new Error('Duplicated Repo')
+        throw new Error('Duplicated Repo');
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
       this.setState({
         loading: false,
         notFound: true,
         message: 'invalid input!',
-      })
+      });
 
       setTimeout(() => this.setState({ message: '' }), 3000);
-
     }
   };
-
 
   render() {
     const { newRepo, loading, repositories, notFound, message } = this.state;
@@ -114,28 +113,31 @@ class Main extends Component {
             notFound={notFound}
           />
 
-          <SmallMessage notFound={notFound}>
-            { message }
-          </SmallMessage>
+          <SmallMessage notFound={notFound}>{message}</SmallMessage>
 
           <SubmitButton loading={loading}>
-            { loading ?
-              <FaSpinner color='#fff' size={14} />
-              :
-              <FaPlus color='#fff' size={14} />
-            }
-
+            {loading ? (
+              <FaSpinner color="#fff" size={14} />
+            ) : (
+              <FaPlus color="#fff" size={14} />
+            )}
           </SubmitButton>
         </Form>
 
         <List>
           {repositories.map(repository => (
             <li key={repository.name}>
-
-              <span>{repository.name}<FaTrashAlt onClick={() => this.removeLSrepo(repository.name)} /></span>
-              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>Details</Link>
+              <span>
+                {repository.name}
+                <FaTrashAlt
+                  onClick={() => this.removeLSrepo(repository.name)}
+                />
+              </span>
+              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+                Details
+              </Link>
             </li>
-          ) )}
+          ))}
         </List>
       </Container>
     );

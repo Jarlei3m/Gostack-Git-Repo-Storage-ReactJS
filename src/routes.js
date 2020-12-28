@@ -4,7 +4,7 @@ import Main from './pages/Main';
 import Repository from './pages/Repository';
 
 function Routes() {
-  return(
+  return (
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Main} />

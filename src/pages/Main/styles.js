@@ -7,18 +7,16 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const InputField = styled.input.attrs( props => ({
+export const InputField = styled.input.attrs(props => ({
   type: 'text',
   placeholder: 'Add repository',
 }))`
-
   flex: 1;
   padding: 10px 15px;
   border-radius: 4px;
   font-size: 16px;
 
-  border: ${ props => props.notFound ? '1px solid red' : '1px solid #eee'};
-
+  border: ${props => (props.notFound ? '1px solid red' : '1px solid #eee')};
 `;
 
 const translate = keyframes`
@@ -29,18 +27,21 @@ const translate = keyframes`
   to {
     transform: translate3d(0, 0, 0);
   }
-`
+`;
 
 export const SmallMessage = styled.small`
   position: absolute;
   top: 44px;
   left: 8px;
   font-size: 11px;
-  color: ${props => props.notFound ? 'rgba(233, 33, 33);' : 'rgb(99, 192, 99);'};
+  color: ${props =>
+    props.notFound ? 'rgba(233, 33, 33);' : 'rgb(99, 192, 99);'};
 
-  ${props => props.children && css`
-    animation: ${translate} .3s ease-out;
-  `}
+  ${props =>
+    props.children &&
+    css`
+      animation: ${translate} 0.3s ease-out;
+    `}
 `;
 
 const rotate = keyframes`
@@ -51,13 +52,12 @@ const rotate = keyframes`
   to {
     transform: rotate(360deg);
   }
-`
+`;
 
-export const SubmitButton = styled.button.attrs( props => ({
+export const SubmitButton = styled.button.attrs(props => ({
   type: 'submit',
   disabled: props.loading,
 }))`
-
   background: #7159c1;
   border: 0;
   padding: 0 15px;
@@ -73,12 +73,13 @@ export const SubmitButton = styled.button.attrs( props => ({
     opacity: 0.6;
   }
 
-  ${props => props.loading &&
-  css`
-    svg {
-      animation: ${rotate} 2s linear infinite;
-    }
-  `}
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
 `;
 
 export const List = styled.ul`
@@ -120,5 +121,4 @@ export const List = styled.ul`
       color: #a3a3a3;
     }
   }
-
 `;
