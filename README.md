@@ -12,7 +12,7 @@
 
 ---
 
-## 🔥 Check it out! [Live Demo]()
+## 🔥 Check it out!
 
 ![Github repository storage](src/images/module5-gif.gif)
 
