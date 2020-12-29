@@ -14,7 +14,7 @@
 
 ## 🔥 Check it out!
 
-![Github repository storage](src/images/module5-gif.gif)
+![Github repository storage](src/images/git-rep-stg.gif)
 
 <p>&nbsp;&nbsp;</p>
 
