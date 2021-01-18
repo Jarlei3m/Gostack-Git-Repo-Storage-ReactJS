@@ -14,6 +14,7 @@
 
 ## 🔥 Check it out!
 
+ - [https://github-repository-storage.netlify.app/](https://github-repository-storage.netlify.app/)
 ![Github repository storage](src/images/git-rep-stg.gif)
 
 <p>&nbsp;&nbsp;</p>
@@ -28,6 +29,8 @@ Recommended plugins installed (not mandotory).
 - 💖 **Prettier** - Opinionated Code Formatter
 - 📄 **EditorConfig for VS Code** - Applies any relevant editor settings
 - 🔥 **ES7 React/Redux/GraphQL/React-Native snippets** - Snippets in ES7 with Babel plugin features
+- 💅 **vscode-styled-components** - Highlight styled components in JavaScript and TypeScript. 
+
 
 Clone this repository and run the following commands inside the project folder:
 
@@ -39,7 +42,3 @@ To view the project you can open `http://localhost:3000`.
 <p>&nbsp;&nbsp;</p>
 
 ---
-
-## 📂 License
-
-This project is licensed under the MIT License.
